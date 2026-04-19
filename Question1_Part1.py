@@ -103,3 +103,49 @@ plt.ylabel('Proteins')
 plt.title('p1(0) < p2(0)')
 plt.legend()
 plt.show()
+
+
+
+
+p1_vals = np.linspace(0, 10, 20)
+p2_vals = np.linspace(0, 10, 20)
+
+P1, P2 = np.meshgrid(p1_vals, p2_vals)
+
+
+dP1 = np.zeros_like(P1)
+dP2 = np.zeros_like(P2)
+
+for i in range(P1.shape[0]):
+    for j in range(P1.shape[1]):
+        dp = ODES(0, [P1[i, j], P2[i, j]])
+        dP1[i, j] = dp[0]
+        dP2[i, j] = dp[1]
+
+mag = np.sqrt(dP1**2 + dP2**2)
+
+
+mag[mag == 0] = 1
+
+dP1_norm = dP1 / mag
+dP2_norm = dP2 / mag
+
+plt.figure(figsize=(7,7))
+
+
+plt.quiver(P1, P2, dP1_norm, dP2_norm)
+
+
+plt.plot(sol1.y[0], sol1.y[1], label='Trajectory IC1')
+plt.plot(sol2.y[0], sol2.y[1], label='Trajectory IC2')
+
+
+plt.xlabel('p1')
+plt.ylabel('p2')
+plt.title('Phase Portrait')
+
+plt.xlim(0,10)
+plt.ylim(0,10)
+
+plt.legend()
+plt.show()
